@@ -1,0 +1,24 @@
+name: Validate interactive prototype
+on:
+  push:
+    branches: ["prototype/**"]
+  pull_request:
+    paths:
+      - "index.html"
+      - "assets/**"
+      - ".github/workflows/validate.yml"
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: JavaScript syntax
+        run: node --check assets/app.js
+      - name: Verify static entry
+        run: |
+          test -f index.html
+          test -f assets/style.css
+          grep -q 'assets/app.js' index.html
